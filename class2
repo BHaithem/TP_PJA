@@ -1,0 +1,40 @@
+package com.Dev_TP2;
+
+import java.io.*;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+public class Class2 {
+
+    public static void main(String [] args) {
+        Employee employee = null;
+        try {
+            FileInputStream fileIn = new FileInputStream("emp.dat");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            employee = (Employee) in.readObject();
+            in.close();
+            fileIn.close();
+        } catch (IOException | ClassNotFoundException fileNotFoundException) {
+            fileNotFoundException.printStackTrace();
+        }
+        System.out.println("Désérialiser ...");
+        assert employee != null;
+        System.out.println("Name: " + employee.name);
+        System.out.println("addr: " + employee.address);
+        System.out.println("ssn: " + employee.SSN);
+        System.out.println("nbr: " + employee.number);
+        System.out.println(Class1.nbr);
+        try{
+            RandomAccessFile random = new RandomAccessFile("empdirect.dat", "rw");
+            random.seek(0);
+            for(int n=0;n<Class1.nbr;n++) {
+                random.writeUTF(employee.name);
+                random.writeUTF(employee.address);
+                random.write(employee.SSN);
+                random.write(employee.number);
+                random.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
